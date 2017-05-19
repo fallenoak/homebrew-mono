@@ -12,13 +12,15 @@ class GtkSharp3 < Formula
   depends_on "pango"
   depends_on "harfbuzz"
   depends_on "glib"
+  depends_on "mono"
   depends_on :x11
 
   def install
-    ENV.append_path "PKG_CONFIG_PATH", "#{HOMEBREW_PREFIX}/lib/pkgconfig"
-    ENV.append_path "PKG_CONFIG_PATH", "/Library/Frameworks/Mono.framework/Versions/Current/lib/pkgconfig"
-
     inreplace "autogen.sh", "libtoolize", "glibtoolize"
+
+    # MCS replaced GMCS and the GMCS compat shim no longer exists
+    inreplace "configure.ac", "gmcs", "mcs"
+
     system "./autogen.sh", "--prefix=#{prefix}"
     system "make", "install"
   end
